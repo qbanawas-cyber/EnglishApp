@@ -17,10 +17,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Extract and Build
+    - name: Extract and Find Project
       run: |
         unzip *.zip -d project_folder
-        cd project_folder/*
+        # البحث عن المجلد الذي يحتوي على gradlew والانتقال إليه
+        GRADLE_DIR=$(find project_folder -name gradlew -exec dirname {} \;)
+        echo "Project directory found at: $GRADLE_DIR"
+        cd "$GRADLE_DIR"
         chmod +x gradlew
         ./gradlew assembleDebug
 
@@ -29,4 +32,3 @@ jobs:
       with:
         name: Finished-APK
         path: "**/build/outputs/apk/debug/*.apk"
-        
